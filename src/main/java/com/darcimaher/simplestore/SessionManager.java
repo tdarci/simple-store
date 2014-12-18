@@ -16,7 +16,7 @@ public class SessionManager {
                 } else {
                     try {
                         Cmd cmd = CmdType.parseInput(inputLine);
-                        System.out.println("command received: "  + cmd);
+                        processCommand(cmd);
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }
@@ -26,7 +26,10 @@ public class SessionManager {
         }   catch (Exception e) {
             e.printStackTrace(System.err);
         }
-        // process console input
+    }
+
+    private void processCommand( Cmd cmd) {
+        System.out.println("Processing command...: "  + cmd);
     }
 
 }
