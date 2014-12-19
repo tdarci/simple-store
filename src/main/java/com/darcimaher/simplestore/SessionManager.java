@@ -1,29 +1,47 @@
 package com.darcimaher.simplestore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
 public class SessionManager {
 
     protected final SearchableStringMap data;
+    protected final List<SearchableStringMap> openTransactionsData;
 
     public SessionManager() {
+
         data = new SearchableStringMap();
+        openTransactionsData = new ArrayList<SearchableStringMap>();
     }
 
     public void run() {
 
         try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
+
                 System.out.print("SIMPLE STORE: ");
+
                 String inputLine = scanner.nextLine();
-                if (inputLine.trim().toLowerCase().equals("end")) {
+                if (inputLine == null) {
+                    continue;
+                }
+
+                inputLine = inputLine.trim();
+                if (inputLine.isEmpty()) {
+                    continue;
+                }
+
+                if (inputLine.equalsIgnoreCase("end") || inputLine.equalsIgnoreCase("quit") || inputLine.equalsIgnoreCase("exit") || inputLine.equalsIgnoreCase("bye")) {
                     System.out.println("GOODBYE.");
                     break;
                 } else {
+
                     try {
                         Cmd cmd = CmdType.parseInput(inputLine);
                         CmdResponse rsp = processCommand(cmd);
+
                         if (rsp.errMessage != null) {
                             System.out.println("  * ERROR: " + rsp.errMessage);
                         } else {
@@ -32,6 +50,7 @@ public class SessionManager {
                         if (rsp.value != null) {
                             System.out.println("  * GOT VALUE: " + rsp.value);
                         }
+
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }
@@ -45,15 +64,13 @@ public class SessionManager {
 
     private CmdResponse processCommand( Cmd cmd) {
 
-//        System.out.println("Processing command...: "  + cmd);
-
         switch (cmd.cmdType) {
             case SET:
                 this.data.put(cmd.paramA, cmd.paramB);
                 return new CmdResponse(null, "Set " + cmd.paramA + " to " + cmd.paramB, null);
             case GET:
                 String val = this.data.get(cmd.paramA);
-                String msg = null;
+                String msg;
                 if (val != null) {
                     msg = "Found value '" + val + "' for key " + cmd.paramA;
                 } else {

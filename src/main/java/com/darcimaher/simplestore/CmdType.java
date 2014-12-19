@@ -2,19 +2,25 @@ package com.darcimaher.simplestore;
 
 public enum CmdType {
 
-    SET (2),
-    GET (1),
-    UNSET (1),
-    NUMEQUALTO (1),
-    BEGIN (0),
-    COMMIT (0),
-    LOAD (1) // for loading a file. unimplemented.
+    SET (2, true),
+    GET (1, true),
+    UNSET (1, true),
+    NUMEQUALTO (1, true),
+    BEGIN (0, false),
+    COMMIT (0, false),
+    ROLLBACK (0, false)
     ;
 
     protected final int paramCount;
+    protected final boolean isTransactional;
 
-    CmdType(int paramCount) {
+    CmdType(int paramCount, boolean isTransactional) {
         this.paramCount = paramCount;
+        this.isTransactional = isTransactional;
+    }
+
+    public boolean getIsTransactional() {
+        return isTransactional;
     }
 
     /**
