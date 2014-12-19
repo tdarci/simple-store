@@ -8,7 +8,8 @@ public enum CmdType {
     NUMEQUALTO (1),
     BEGIN (0),
     COMMIT (0),
-    LOAD (1);
+    LOAD (1) // for loading a file. unimplemented.
+    ;
 
     protected final int paramCount;
 

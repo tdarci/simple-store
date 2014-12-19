@@ -1,6 +1,7 @@
 package com.darcimaher.simplestore;
 
 import java.util.Scanner;
+import java.util.Set;
 
 public class SessionManager {
 
@@ -24,12 +25,12 @@ public class SessionManager {
                         Cmd cmd = CmdType.parseInput(inputLine);
                         CmdResponse rsp = processCommand(cmd);
                         if (rsp.errMessage != null) {
-                            System.out.println("ERROR: " + rsp.errMessage);
+                            System.out.println("  * ERROR: " + rsp.errMessage);
                         } else {
-                            System.out.println("SUCCESS: " + rsp.message);
+                            System.out.println("  * SUCCESS: " + rsp.message);
                         }
                         if (rsp.value != null) {
-                            System.out.println("GOT VALUE: " + rsp.value);
+                            System.out.println("  * GOT VALUE: " + rsp.value);
                         }
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
@@ -44,7 +45,7 @@ public class SessionManager {
 
     private CmdResponse processCommand( Cmd cmd) {
 
-        System.out.println("Processing command...: "  + cmd);
+//        System.out.println("Processing command...: "  + cmd);
 
         switch (cmd.cmdType) {
             case SET:
@@ -52,7 +53,20 @@ public class SessionManager {
                 return new CmdResponse(null, "Set " + cmd.paramA + " to " + cmd.paramB, null);
             case GET:
                 String val = this.data.get(cmd.paramA);
-                return new CmdResponse(val, null, null);
+                String msg = null;
+                if (val != null) {
+                    msg = "Found value '" + val + "' for key " + cmd.paramA;
+                } else {
+                    msg = "No value found for key " + cmd.paramA;
+                }
+                return new CmdResponse(val, msg, null);
+            case UNSET:
+                this.data.remove(cmd.paramA);
+                return new CmdResponse(null, "Removed key: " + cmd.paramA, null);
+            case NUMEQUALTO:
+                Set<String> matchingKeys = this.data.keysWithValue(cmd.paramA);
+                long matchCount = matchingKeys.size();
+                return new CmdResponse(matchCount + "", "Found " + matchCount + " keys with value '" + cmd.paramA + "'", null);
             default:
                 return null;
 
