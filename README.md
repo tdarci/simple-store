@@ -7,4 +7,6 @@ Made just for fun.
 - Run "mvn install".
 - Run "java -jar target/simple-store-1.0-SNAPSHOT.jar".
 
+NOTE: Requires Java 1.7.
+
 
