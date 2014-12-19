@@ -22,7 +22,15 @@ public class SessionManager {
                 } else {
                     try {
                         Cmd cmd = CmdType.parseInput(inputLine);
-                        processCommand(cmd);
+                        CmdResponse rsp = processCommand(cmd);
+                        if (rsp.errMessage != null) {
+                            System.out.println("ERROR: " + rsp.errMessage);
+                        } else {
+                            System.out.println("SUCCESS: " + rsp.message);
+                        }
+                        if (rsp.value != null) {
+                            System.out.println("GOT VALUE: " + rsp.value);
+                        }
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }

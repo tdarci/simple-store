@@ -30,11 +30,6 @@
                             <addClasspath>true</addClasspath>
                             <mainClass>com.darcimaher.simplestore.SimpleStore</mainClass>
                         </manifest>
-                        <!--<manifestEntries>-->
-                            <!--<mode>development</mode>-->
-                            <!--<url>${project.url}</url>-->
-                            <!--<key>value</key>-->
-                        <!--</manifestEntries>-->
                     </archive>
                 </configuration>
             </plugin>
