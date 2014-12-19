@@ -3,6 +3,7 @@ package com.darcimaher.simplestore;
 public enum CmdType {
 
     SET (2),
+    GET (1),
     UNSET (1),
     NUMEQUALTO (1),
     BEGIN (0),

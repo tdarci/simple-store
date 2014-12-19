@@ -13,7 +13,11 @@ public class SearchableStringMap implements Map<String, String> {
     }
 
     public Set<String> keysWithValue(String value) {
-        return this.reverseMap.get(value);
+        Set<String> foundSet = this.reverseMap.get(value);
+        if (foundSet == null) {
+            foundSet = Collections.emptySet();
+        }
+        return foundSet;
     }
 
     @Override
@@ -48,15 +52,19 @@ public class SearchableStringMap implements Map<String, String> {
         removeReverseMapEntry(key);
 
         // update our reverseMap: add new entry
+        addReverseMapEntry(key, value);
+
+        return this.map.put(key, value);
+
+    }
+
+    private void addReverseMapEntry(String key, String value) {
         Set<String> keyList = reverseMap.get(value);
         if (keyList == null) {
             keyList = new HashSet<String>();
             this.reverseMap.put(value, keyList);
         }
         keyList.add(key);
-
-        return this.map.put(key, value);
-
     }
 
     private void removeReverseMapEntry(String key) {
@@ -72,7 +80,11 @@ public class SearchableStringMap implements Map<String, String> {
 
     @Override
     public String remove(Object key) {
-        removeReverseMapEntry(key);
+        if (!(key instanceof String)) {
+            return null;
+        }
+        String stringKey = (String)key;
+        removeReverseMapEntry(stringKey);
         return this.map.remove(key);
     }
 
@@ -83,15 +95,16 @@ public class SearchableStringMap implements Map<String, String> {
     }
 
     private void rebuildReverseMap() {
-        for (Entry<String, String> e in this.map.entrySet()) {
-
+        this.reverseMap.clear();
+        for (Entry<String, String> e : this.map.entrySet()) {
+            this.addReverseMapEntry(e.getKey(), e.getValue());
         }
     }
 
     @Override
     public void clear() {
         this.map.clear();
-        this.reverseMap.clear();
+        this.rebuildReverseMap();
     }
 
     @Override
