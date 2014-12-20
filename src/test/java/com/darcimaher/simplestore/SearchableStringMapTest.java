@@ -82,4 +82,5 @@ public class SearchableStringMapTest {
         Assert.assertTrue(m.keysWithValue("cabbage").contains("d"));
 
     }
+
 }
