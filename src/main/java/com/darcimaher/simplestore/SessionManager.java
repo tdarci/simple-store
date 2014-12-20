@@ -1,9 +1,6 @@
 package com.darcimaher.simplestore;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 public class SessionManager {
 
@@ -31,6 +28,8 @@ public class SessionManager {
                 }
 
                 if (inputLine.equalsIgnoreCase("end") || inputLine.equalsIgnoreCase("quit") || inputLine.equalsIgnoreCase("exit") || inputLine.equalsIgnoreCase("bye")) {
+                    // let's make sure we leave things clean.
+                    data.commitAllTransactions();
                     System.out.println("GOODBYE.");
                     break;
                 } else {
@@ -61,6 +60,10 @@ public class SessionManager {
 
     private CmdResponse processCommand( Cmd cmd) {
 
+        if (cmd.cmdType.getRequiresTransaction() && ! data.inTransaction()){
+            return new CmdResponse(null, null, "No transaction. This command requires a transaction.");
+        }
+
         switch (cmd.cmdType) {
             case SET:
                 data.set(cmd.paramA, cmd.paramB);
@@ -80,6 +83,15 @@ public class SessionManager {
             case NUMEQUALTO:
                 long matchCount = data.countWithValue(cmd.paramA);
                 return new CmdResponse(matchCount + "", "Found " + matchCount + " keys with value '" + cmd.paramA + "'", null);
+            case BEGIN:
+                data.beginTransaction();
+                return new CmdResponse(null, "Transaction begun.", null);
+            case ROLLBACK:
+                data.rollbackOneTransaction();
+                return new CmdResponse(null, "Transaction rolled back.", null);
+            case COMMIT:
+                data.commitAllTransactions();
+                return new CmdResponse(null, "Data saved.", null);
             default:
                 return null;
 

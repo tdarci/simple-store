@@ -2,25 +2,25 @@ package com.darcimaher.simplestore;
 
 public enum CmdType {
 
-    SET (2, true),
-    GET (1, true),
-    UNSET (1, true),
-    NUMEQUALTO (1, true),
+    SET (2, false),
+    GET (1, false),
+    UNSET (1, false),
+    NUMEQUALTO (1, false),
     BEGIN (0, false),
-    COMMIT (0, false),
-    ROLLBACK (0, false)
+    COMMIT (0, true),
+    ROLLBACK (0, true)
     ;
 
     protected final int paramCount;
-    protected final boolean isTransactional;
+    protected final boolean requiresTransaction;
 
-    CmdType(int paramCount, boolean isTransactional) {
+    CmdType(int paramCount, boolean requiresTransaction) {
         this.paramCount = paramCount;
-        this.isTransactional = isTransactional;
+        this.requiresTransaction = requiresTransaction;
     }
 
-    public boolean getIsTransactional() {
-        return isTransactional;
+    public boolean getRequiresTransaction() {
+        return requiresTransaction;
     }
 
     /**
