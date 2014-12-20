@@ -9,4 +9,15 @@ Made just for fun.
 
 NOTE: Requires Java 1.7.
 
+# Commands
+- SET key value
+- UNSET key
+- GET key
+- NUMEQUALTO value
+- BEGIN
+- ROLLBACK
+- COMMIT
+- END
+
+
 
