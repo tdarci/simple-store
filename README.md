@@ -18,7 +18,7 @@ NOTE: Requires Java 1.7.
 - ROLLBACK
 - COMMIT
 - END
-- 
+
 # Example
 ```
 java -jar target/simple-store-1.0-SNAPSHOT.jar 
