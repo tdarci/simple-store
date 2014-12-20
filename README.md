@@ -93,6 +93,25 @@ SIMPLE STORE: END
 GOODBYE.
 ```
 
+# Example Using Input from File
+```
+-------- > cat testin.txt 
+SET a apple
+GET a
+SET b banana
+NUMEQUALTO banana
+END
+
+-------- > cat testin.txt | java -jar target/simple-store-1.0-SNAPSHOT.jar 
+SIMPLE STORE:   * SUCCESS: Set a to apple
+SIMPLE STORE:   * SUCCESS: Found value 'apple' for key a
+  * GOT VALUE: apple
+SIMPLE STORE:   * SUCCESS: Set b to banana
+SIMPLE STORE:   * SUCCESS: Found 1 keys with value 'banana'
+  * GOT VALUE: 1
+SIMPLE STORE: GOODBYE.
+```
+
 
 
 
