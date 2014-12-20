@@ -7,13 +7,10 @@ import java.util.Set;
 
 public class SessionManager {
 
-    protected final SearchableStringMap data;
-    protected final List<SearchableStringMap> openTransactionsData;
+    protected final TransactionalDataStore data;
 
     public SessionManager() {
-
-        data = new SearchableStringMap();
-        openTransactionsData = new ArrayList<SearchableStringMap>();
+        data = new TransactionalDataStore();
     }
 
     public void run() {
@@ -66,10 +63,10 @@ public class SessionManager {
 
         switch (cmd.cmdType) {
             case SET:
-                this.data.put(cmd.paramA, cmd.paramB);
+                data.set(cmd.paramA, cmd.paramB);
                 return new CmdResponse(null, "Set " + cmd.paramA + " to " + cmd.paramB, null);
             case GET:
-                String val = this.data.get(cmd.paramA);
+                String val = data.get(cmd.paramA);
                 String msg;
                 if (val != null) {
                     msg = "Found value '" + val + "' for key " + cmd.paramA;
@@ -78,11 +75,10 @@ public class SessionManager {
                 }
                 return new CmdResponse(val, msg, null);
             case UNSET:
-                this.data.remove(cmd.paramA);
+                data.unset(cmd.paramA);
                 return new CmdResponse(null, "Removed key: " + cmd.paramA, null);
             case NUMEQUALTO:
-                Set<String> matchingKeys = this.data.keysWithValue(cmd.paramA);
-                long matchCount = matchingKeys.size();
+                long matchCount = data.countWithValue(cmd.paramA);
                 return new CmdResponse(matchCount + "", "Found " + matchCount + " keys with value '" + cmd.paramA + "'", null);
             default:
                 return null;
